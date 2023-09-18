@@ -1,6 +1,5 @@
 {
     "python.testing.pytestArgs": [
-        "--cov=src",
         "--cov-report=xml",
         "."
     ],

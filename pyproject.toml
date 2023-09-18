@@ -16,6 +16,9 @@ coverage = "^7.3.1"
 pytest-cov = "^4.1.0"
 
 
+[tool.pytest.ini_options]
+addopts = "--doctest-glob=*.md --doctest-modules"
+
 [tool.coverage.run]
 source = ["pytable"]
 command_line = "-m pytest -v"
