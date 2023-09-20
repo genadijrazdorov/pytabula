@@ -2,7 +2,7 @@
 
 ## Basics
 
-~~~python
+~~~pycon
 >>> from pytable import Table
 
 >>> t = Table([('Ivica', 'M', 10), ('Marica', 'F', 8)], columns=('name', 'sex', 'age'))
@@ -72,7 +72,7 @@ Ivica   M    10
 
 ## Slicing
 
-~~~python
+~~~pycon
 >>> print(t[:2])
 name    sex  age 
 ------- ---- ----
