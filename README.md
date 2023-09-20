@@ -58,17 +58,6 @@ Ivica   M    10
 
 ~~~
 
-## Table mutation
-
-+ >>> t[...] = Table()
-+ >>> del t[...]
-+ >>> t.insert()
-+ >>> t.append()
-+ >>> t.reverse()
-+ >>> t.extend()
-+ >>> t.pop()
-+ >>> t.remove()
-+ >>> t += Table()
 
 ## Slicing
 
@@ -90,3 +79,16 @@ name   sex
 Ivica  M   
 
 ~~~
+
+
+## Table mutation
+
++ >>> t[...] = Table()
++ >>> del t[...]
++ >>> t.insert()
++ >>> t.append()
++ >>> t.reverse()
++ >>> t.extend()
++ >>> t.pop()
++ >>> t.remove()
++ >>> t += Table()
