@@ -60,12 +60,6 @@ class Table(abc.Sequence):
             
         return False
     
-    # def __iter__(self):
-    #     pass
-    
-    def __reversed__(self):
-        pass
-    
     def index(self, item):
         pass
     

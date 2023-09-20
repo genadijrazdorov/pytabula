@@ -39,18 +39,15 @@ True
 >>> 'Ivica' in t
 True
 
->>> for l in t:
-...     pass
+>>> for r in t:
+...     print(r)
+('Ivica', 'M', 10)
+('Marica', 'F', 8)
 
->>> # reversed(t)
-<Table
-
-name    sex  age
-------- ---- ----
-Marica  F    8
-Ivica   M    10
-
->
+>>> for r in reversed(t):
+...     print(r)
+('Marica', 'F', 8)
+('Ivica', 'M', 10)
 
 >>> # t.index()
 
