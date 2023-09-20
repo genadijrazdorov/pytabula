@@ -49,9 +49,22 @@ True
 ('Marica', 'F', 8)
 ('Ivica', 'M', 10)
 
->>> # t.index()
+>>> t.index(('Ivica', 'M', 10))
+0
 
->>> # t.count()
+>>> t.index('F')
+(1, 'sex')
+
+>>> t.index(1)
+Traceback (most recent call last):
+  ...
+ValueError: 1 not found
+
+>>> t.count(('Ivica', 'M', 10))
+1
+
+>>> t.count('M')
+1
 
 ~~~
 

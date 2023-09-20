@@ -60,11 +60,23 @@ class Table(abc.Sequence):
             
         return False
     
-    def index(self, item):
-        pass
+    def index(self, row_or_item):
+        try:
+            return super().index(row_or_item)
+
+        except ValueError:
+            for i, row in enumerate(self):
+                if row_or_item in row:
+                    return i, self.columns[row.index(row_or_item)]
+            
+        raise ValueError(f'{row_or_item} not found')
     
-    def count(self, item):
-        pass
+    def count(self, row_or_item):
+        if count := super().count(row_or_item):
+            return count
+
+        else:
+            return sum(1 for row in self if row_or_item in row)
 
 
     def __hash__(self) -> int:

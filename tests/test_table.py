@@ -59,7 +59,18 @@ class TestTable:
         assert 12 in tbl
         assert 1 not in tbl
 
+    def test_index(self, tbl):
+        assert tbl.index(('ozzy', 'dog', 18)) == 0
+        assert tbl.index('ozzy') == (0, 'name')
+        with pytest.raises(ValueError):
+            tbl.index('john')
+
+    def test_count(self, tbl):
+        assert tbl.count(('ozzy', 'dog', 18)) == 1
+        assert tbl.count('ozzy') == 1
+        assert tbl.count('john') == 0
     
+
 class TestTable__getitem__:
     def test_single_row(self, tbl):
         assert tbl[0] == ('ozzy', 'dog', 18)
