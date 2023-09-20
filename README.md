@@ -5,43 +5,44 @@
 ~~~python
 >>> from pytable import Table
 
->>> t = Table(name=['Ivica', 'Marica'], sex=['M', 'F'], age=[10, 8])
->>> t
-<Table
-
-name    sex  age
+>>> t = Table([('Ivica', 'M', 10), ('Marica', 'F', 8)], columns=('name', 'sex', 'age'))
+>>> print(t)
+name    sex  age 
 ------- ---- ----
-Ivica   M    10
-Marica  F    8
+Ivica   M      10
+Marica  F       8
 
->
+>>> t
+Table([('Ivica', 'M', 10), ('Marica', 'F', 8)], columns=('name', 'sex', 'age'))
 
 >>> t.columns
-['name', 'sex', 'age']
-
+('name', 'sex', 'age')
 
 >>> len(t)
 2
 
 >>> t[0]
+('Ivica', 'M', 10)
+
+>>> #t[0]
 Row(name='Ivica', sex='M', age=10)
 
->>> t[..., 'name']
-['Ivica', 'Marica']
+>>> t[:, 'name']
+('Ivica', 'Marica')
 
 >>> t[1, 'age']
 8
 
->>> 'Ivica' in t
+>>> # 'Ivica' in t
 True
 
->>> ('Marica', 'F', 8) in t
+>>> # ('Marica', 'F', 8) in t
 True
 
 >>> for l in t:
 ...     pass
 
->>> reversed(t)
+>>> # reversed(t)
 <Table
 
 name    sex  age
@@ -51,50 +52,41 @@ Ivica   M    10
 
 >
 
->>> t.index()
+>>> # t.index()
 
->>> t.count()
+>>> # t.count()
 
-
->>> t[...] = Table()
->>> del t[...]
->>> t.insert()
->>> t.append()
->>> t.reverse()
->>> t.extend()
->>> t.pop()
->>> t.remove()
->>> t += Table()
 ~~~
+
+## Table mutation
+
++ >>> t[...] = Table()
++ >>> del t[...]
++ >>> t.insert()
++ >>> t.append()
++ >>> t.reverse()
++ >>> t.extend()
++ >>> t.pop()
++ >>> t.remove()
++ >>> t += Table()
 
 ## Slicing
 
 ~~~python
->>> t[:2]
-<Table
-
-name    sex  age
+>>> print(t[:2])
+name    sex  age 
 ------- ---- ----
-Ivica   M    10
-Marica  F    8
+Ivica   M      10
+Marica  F       8
 
->
+>>> print(t[:1])
+name   sex  age 
+------ ---- ----
+Ivica  M      10
 
->>> t[:1]
-<Table
+>>> print(t[:1, 'name': 'age'])
+name   sex 
+------ ----
+Ivica  M   
 
-name    sex  age
-------- ---- ----
-Ivica   M    10
-
->
-
->>> t[:1, 'name': 'age']
-<Table
-
-name    sex 
-------- ----
-Ivica   M   
-
->
 ~~~
