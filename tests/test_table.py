@@ -51,6 +51,14 @@ class TestTable:
             ('mary', 'cat', 12)
         ))
 
+    def test__contains__(self, tbl):
+        assert ('ozzy', 'dog', 18) in tbl
+        assert ('mary', 'cat', 12) in tbl
+        assert ('mary', 'cat', 2) not in tbl
+        assert 'mary' in tbl
+        assert 12 in tbl
+        assert 1 not in tbl
+
     
 class TestTable__getitem__:
     def test_single_row(self, tbl):

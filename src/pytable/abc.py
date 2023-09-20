@@ -50,8 +50,15 @@ class Table(abc.Sequence):
     def __len__(self):
         return 0            # pragma: no cover
 
-    def __contains__(self, item):
-        pass
+    def __contains__(self, row_or_item) -> bool:
+        if super().__contains__(row_or_item):
+            return True
+
+        for row in self:
+            if row_or_item in row:
+                return True
+            
+        return False
     
     # def __iter__(self):
     #     pass

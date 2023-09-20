@@ -33,10 +33,10 @@ Row(name='Ivica', sex='M', age=10)
 >>> t[1, 'age']
 8
 
->>> # 'Ivica' in t
+>>> ('Marica', 'F', 8) in t
 True
 
->>> # ('Marica', 'F', 8) in t
+>>> 'Ivica' in t
 True
 
 >>> for l in t:
