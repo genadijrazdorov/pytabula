@@ -79,6 +79,34 @@ class TestTable:
         assert tbl.count(('ozzy', 'dog', 18)) == 1
         assert tbl.count('ozzy') == 1
         assert tbl.count('john') == 0
+
+    def test__add__(self, tbl):
+        assert tbl + tbl == Table((
+            ('ozzy', 'dog', 18),
+            ('mary', 'cat', 12),
+            ('ozzy', 'dog', 18),
+            ('mary', 'cat', 12)
+        ), columns=('name', 'animal', 'age'))
+
+    def test__mul__(self, tbl):
+        assert tbl * 2 == Table((
+            ('ozzy', 'dog', 18),
+            ('mary', 'cat', 12),
+            ('ozzy', 'dog', 18),
+            ('mary', 'cat', 12)
+        ), columns=('name', 'animal', 'age'))
+
+    def test__repr__(self, tbl):
+        assert repr(tbl) == "Table([('ozzy', 'dog', 18), ('mary', 'cat', 12)], columns=('name', 'animal', 'age'))"
+
+    def test__str__(self, tbl):
+        assert str(tbl) == '\n'.join(l.lstrip() for l in """
+            name  animal  age 
+            ----- ------- ----
+            ozzy  dog       18
+            mary  cat       12
+
+        """.strip().splitlines())
     
 
 class TestTable__getitem__:

@@ -72,6 +72,21 @@ True
 >>> t > Table([('Ivica', 'M', 13)])
 False
 
+>>> print(t + Table([('Jura', 'M', 100)], columns=('name', 'sex', 'age')))
+name    sex  age 
+------- ---- ----
+Ivica   M      10
+Marica  F       8
+Jura    M     100
+
+>>> print(t * 2)
+name    sex  age 
+------- ---- ----
+Ivica   M      10
+Marica  F       8
+Ivica   M      10
+Marica  F       8
+
 ~~~
 
 
@@ -89,7 +104,7 @@ name   sex  age
 ------ ---- ----
 Ivica  M      10
 
->>> print(t[:1, 'name': 'age'])
+>>> print(t[:1, :'age'])
 name   sex 
 ------ ----
 Ivica  M   

@@ -129,7 +129,9 @@ class Table(abc.Sequence):
             return True
 
     def __add__(self, other: Self) -> Self:
-        pass
+        assert self.columns == other.columns
+
+        return type(self)(tuple(self) + tuple(other), columns=self.columns)
     
     def __mul__(self, other: int) -> Self:
-        pass
+        return type(self)(tuple(self) * other, columns=self.columns)
