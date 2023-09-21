@@ -79,7 +79,7 @@ class TestTable__getitem__:
         assert tbl[-1] == ('mary', 'cat', 12)
 
     def test_row_slice(self, tbl):
-        assert tbl[0:1] == Table((('ozzy', 'dog', 18),), columns=('name', 'animal', 'age'))
+        assert tbl[:1] == Table((('ozzy', 'dog', 18),), columns=('name', 'animal', 'age'))
 
     def test_negative_row_slice(self, tbl):
         assert tbl[-1:] == Table((('mary', 'cat', 12),), columns=('name', 'animal', 'age'))
@@ -89,7 +89,12 @@ class TestTable__getitem__:
 
     def test_slice_single_column(self, tbl):
         assert isinstance(tbl[0:1, 'name'], tuple)
-        assert tbl[0:1, 'name'] == ('ozzy',)
+        assert tbl[:1, 'name'] == ('ozzy',)
 
     def test_slice_slice(self, tbl):
-        assert tbl[0:1, 'name':'age'] == Table((('ozzy', 'dog'),), columns=('name', 'animal'))
+        assert tbl[:1, 'name':'age'] == Table((('ozzy', 'dog'),), columns=('name', 'animal'))
+
+    def test_slice_cols(self, tbl):
+        assert tbl[0, 'name':'age'] == ('ozzy', 'dog')
+        assert tbl[0, :'age'] == ('ozzy', 'dog')
+        assert tbl[0, 'animal':] == ('dog', 18)

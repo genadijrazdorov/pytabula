@@ -35,9 +35,27 @@ class Table(abc.Sequence):
         if isinstance(index, tuple):
             index, col = index
             if isinstance(col, slice):
-                s = self.columns.index(col.start)
-                e = self.columns.index(col.stop)
-                col = slice(s, e)
+                start, stop = col.start, col.stop
+                try:
+                    start = self.columns.index(start)
+
+                except ValueError:
+                    if start is None:
+                        start = 0
+                    else:
+                        raise ValueError(f'{start} not in columns')
+
+                try:
+                    stop = self.columns.index(stop)
+
+                except ValueError:
+                    if stop is None:
+                        stop = len(self.columns)
+                    else:
+                        raise ValueError(f'{stop} not in columns')
+
+                col = slice(start, stop)
+
             else:
                 col = self.columns.index(col)
         
