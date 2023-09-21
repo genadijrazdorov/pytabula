@@ -44,6 +44,16 @@ class TestTable:
     def test__eq__int(self, tbl):
         assert tbl != 1
 
+    def test__lt__(self, tbl):
+        assert tbl < Table((
+            ('ozzy', 'dog', 19),
+        ))
+        assert not tbl < Table((
+            ('ozzy', 'dog', 17),
+        ))
+        with pytest.raises(TypeError):
+            tbl < [('ozzy', 'dog', 19)]
+
     def test__hash__(self, tbl):
         assert hash(tbl) == hash((
             ('name', 'animal', 'age'),

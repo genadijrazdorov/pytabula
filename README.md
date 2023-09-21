@@ -66,6 +66,12 @@ ValueError: 1 not found
 >>> t.count('M')
 1
 
+>>> t == t
+True
+
+>>> t > Table([('Ivica', 'M', 13)])
+False
+
 ~~~
 
 

@@ -96,7 +96,6 @@ class Table(abc.Sequence):
         else:
             return sum(1 for row in self if row_or_item in row)
 
-
     def __hash__(self) -> int:
         return hash((self.columns, *list(self)))
     
@@ -119,17 +118,15 @@ class Table(abc.Sequence):
             return True
 
     def __lt__(self, other: Self) -> bool:
-        pass
-    
-    def __le__(self, other: Self) -> bool:
-        pass
-    
-    def __gt__(self, other: Self) -> bool:
-        pass
-    
-    def __ge__(self, other: Self) -> bool:
-        pass
-    
+        if not isinstance(other, Table):
+            raise TypeError(f'{other} is not a Table')
+
+        for s, o in zip(self, other):
+            if not s < o:
+                return False
+            
+        else:
+            return True
 
     def __add__(self, other: Self) -> Self:
         pass
