@@ -135,3 +135,19 @@ class Table(abc.Sequence):
     
     def __mul__(self, other: int) -> Self:
         return type(self)(tuple(self) * other, columns=self.columns)
+
+        
+class MutableTable(Table, abc.MutableSequence):
+    __hash__ = None
+
+    @abstractmethod
+    def __setitem__(self, index, value):
+        pass            # pragma: no cover
+
+    @abstractmethod
+    def __delitem__(self, index):
+        pass            # pragma: no cover
+
+    @abstractmethod
+    def insert(self, index, value):
+        pass            # pragma: no cover

@@ -1,4 +1,4 @@
-from pytable import Table, abc
+from pytable import Table, MutableTable, abc
 
 import pytest
 
@@ -136,3 +136,52 @@ class TestTable__getitem__:
         assert tbl[0, 'name':'age'] == ('ozzy', 'dog')
         assert tbl[0, :'age'] == ('ozzy', 'dog')
         assert tbl[0, 'animal':] == ('dog', 18)
+
+
+@pytest.fixture
+def mtbl(tbl):
+    return MutableTable(list(tbl), columns=tbl.columns)
+
+
+class TestMutableTable:
+    def test__setitem__(self, mtbl):
+        mtbl[0] = ('john', 'cat', 12)
+        assert mtbl[0] == ('john', 'cat', 12)
+
+    def test__setitem__slice(self, mtbl):
+        mtbl[:, 'animal':] = Table([('rabbit', 3), ('spider', 1)])
+
+        assert mtbl[0] == ('ozzy', 'rabbit', 3)
+        assert mtbl[1] == ('mary', 'spider', 1)
+
+    def test__setitem__append_column(self, mtbl):
+        mtbl[:, 'color'] = ('white', 'black')
+        assert mtbl[0] == ('ozzy', 'dog', 18, 'white')
+        assert mtbl[1] == ('mary', 'cat', 12, 'black')
+        assert mtbl.columns == ('name', 'animal', 'age', 'color')
+
+    def test__setitem__insert_column(self, mtbl):
+        mtbl[:, 'age':'age'] = Table([('black',), ('white',)], columns=('color',))
+        assert mtbl[0] == ('ozzy', 'dog', 'black', 18)
+        assert mtbl[1] == ('mary', 'cat', 'white', 12)
+        assert mtbl.columns == ('name', 'animal', 'color', 'age')
+
+    def test__delitem__rows(self, mtbl):
+        del mtbl[0]
+        assert mtbl[0] == ('mary', 'cat', 12)
+
+    def test__delitem__columns(self, mtbl):
+        del mtbl[:, 'animal':]
+        assert mtbl[0] == ('ozzy',)
+
+    def test__delitem__value_error(self, mtbl):
+        with pytest.raises(ValueError):
+            del mtbl[:1, 'animal']
+
+        with pytest.raises(ValueError):
+            del mtbl[0:2, 'name':]
+
+    def test_insert(self, mtbl):
+        mtbl.insert(0, ('john', 'cat', 12))
+        assert mtbl[0] == ('john', 'cat', 12)
+        assert mtbl[1] == ('ozzy', 'dog', 18)
