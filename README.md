@@ -1,125 +1,156 @@
 # pyTable
 
-## Basics
+[table]: <https://en.wikipedia.org/wiki/Table_(information)>
+[sequence]: <https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence>
 
-~~~pycon
->>> from pytable import Table
+[Table][table] is a [sequence] of objects organized in rows and columns.
+Rows are integer indexed and columns are named.
 
->>> t = Table([('Ivica', 'M', 10), ('Marica', 'F', 8)], columns=('name', 'sex', 'age'))
+Table is a subclass of Sequence as a sequence-of-rows.
+
+## Table initialization
+
+~~~python
+>>> from pytable import Table as T, MutableTable as mT
+
+>>> t = T([
+...     ('ozzy', 'dog', 18),
+...     ('marry', 'cat', 10),
+... ], columns=('name', 'animal', 'age'))
+
 >>> print(t)
-name    sex  age 
-------- ---- ----
-Ivica   M      10
-Marica  F       8
-
->>> t
-Table([('Ivica', 'M', 10), ('Marica', 'F', 8)], columns=('name', 'sex', 'age'))
-
->>> t.columns
-('name', 'sex', 'age')
-
->>> len(t)
-2
-
->>> t[0]
-('Ivica', 'M', 10)
-
->>> #t[0]
-Row(name='Ivica', sex='M', age=10)
-
->>> t[:, 'name']
-('Ivica', 'Marica')
-
->>> t[1, 'age']
-8
-
->>> ('Marica', 'F', 8) in t
-True
-
->>> 'Ivica' in t
-True
-
->>> for r in t:
-...     print(r)
-('Ivica', 'M', 10)
-('Marica', 'F', 8)
-
->>> for r in reversed(t):
-...     print(r)
-('Marica', 'F', 8)
-('Ivica', 'M', 10)
-
->>> t.index(('Ivica', 'M', 10))
-0
-
->>> t.index('F')
-(1, 'sex')
-
->>> t.index(1)
-Traceback (most recent call last):
-  ...
-ValueError: 1 not found
-
->>> t.count(('Ivica', 'M', 10))
-1
-
->>> t.count('M')
-1
-
->>> t == t
-True
-
->>> t > Table([('Ivica', 'M', 13)])
-False
-
->>> print(t + Table([('Jura', 'M', 100)], columns=('name', 'sex', 'age')))
-name    sex  age 
-------- ---- ----
-Ivica   M      10
-Marica  F       8
-Jura    M     100
-
->>> print(t * 2)
-name    sex  age 
-------- ---- ----
-Ivica   M      10
-Marica  F       8
-Ivica   M      10
-Marica  F       8
+name   animal  age 
+------ ------- ----
+ozzy   dog       18
+marry  cat       10
 
 ~~~
 
+## Table operations
 
-## Slicing
+### Common Table Operations
 
-~~~pycon
->>> print(t[:2])
-name    sex  age 
-------- ---- ----
-Ivica   M      10
-Marica  F       8
+Common Table operations extends [common Sequence operations](<https://docs.python.org/3/library/stdtypes.html#common-sequence-operations>) API.
 
->>> print(t[:1])
-name   sex  age 
------- ---- ----
-Ivica  M      10
+#### Contains
+~~~python
+>>> ('marry', 'cat', 10) in t       # row in table
+True
 
->>> print(t[:1, :'age'])
-name   sex 
------- ----
-Ivica  M   
+>>> 'dog' in t                      # item in table
+True
+
+>>> ('ozzy', 'cat', 18) not in t    # row not in table
+True
+
+>>> 'bird' not in t                 # item not in table
+True
 
 ~~~
 
+#### Get item
+~~~python
+>>> t[0]                            # row indexing
+('ozzy', 'dog', 18)
 
-## Table mutation
+>>> t[1, 'animal']                  # item indexing
+'cat'
 
-+ >>> t[...] = Table()
-+ >>> del t[...]
-+ >>> t.insert()
-+ >>> t.append()
-+ >>> t.reverse()
-+ >>> t.extend()
-+ >>> t.pop()
-+ >>> t.remove()
-+ >>> t += Table()
+>>> t[:1]                           # row slicing
+Table([('ozzy', 'dog', 18)], columns=('name', 'animal', 'age'))
+
+>>> #t[0, :'age']                    # column slicing
+Table([('ozzy', 'dog')], columns=('name', 'animal'))
+
+~~~
+
+#### Index and count
+~~~python
+>>> t.index(('marry', 'cat', 10))   # row index
+1
+
+>>> t.index(18)                     # item index
+(0, 'age')
+
+>>> t.count(('ozzy', 'dog', 18))    # row count
+1
+
+>>> t.count('cat')                  # item count
+1
+
+~~~
+
+<https://docs.python.org/3/library/stdtypes.html#immutable-sequence-types>
+
+### Mutable Table operations
+
+Mutable Table operations extends the [mutable sequence types](<https://docs.python.org/3/library/stdtypes.html#mutable-sequence-types>) API.
+
+~~~python
+>>> t = mT(list(t), columns=t.columns)
+
+~~~
+
+#### Set item
+~~~python
+>>> t[0] = ('harry', 'mouse', 2)    # row update
+>>> print(t)
+name   animal  age 
+------ ------- ----
+harry  mouse      2
+marry  cat       10
+
+>>> t[0, 'animal'] = 'python'       # item update
+>>> print(t)
+name   animal  age 
+------ ------- ----
+harry  python     2
+marry  cat       10
+
+>>>                                 # slice update
+>>> t[:, 'animal':] = T([('rabbit', 3), ('spider', 1)])
+>>> print(t)
+name   animal  age 
+------ ------- ----
+harry  rabbit     3
+marry  spider     1
+
+~~~
+
+##### Append column
+~~~python
+>>> t[:, 'food'] = ('carrot', 'fly')
+>>> print(t)
+name   animal  age  food   
+------ ------- ---- -------
+harry  rabbit     3 carrot 
+marry  spider     1 fly    
+
+~~~
+
+##### Insert column(s)
+~~~python
+>>> t[:, 'age':'age'] = T([('big',), ('small',)], columns=('size',))
+>>> print(t)
+name   animal  size   age  food   
+------ ------- ------ ---- -------
+harry  rabbit  big       3 carrot 
+marry  spider  small     1 fly    
+
+~~~
+
+#### Delete item
+~~~python
+>>> del t[1]                        # row deleting
+>>> print(t)
+name   animal  size  age  food   
+------ ------- ----- ---- -------
+harry  rabbit  big      3 carrot 
+
+>>> del t[:, 'age']                 # column deleting
+>>> print(t)
+name   animal  size  food   
+------ ------- ----- -------
+harry  rabbit  big   carrot 
+
+~~~
