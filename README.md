@@ -8,11 +8,13 @@ Rows are integer indexed and columns are named.
 
 Table is a subclass of Sequence as a sequence-of-rows.
 
-## Table initialization
+## Table
 
 ~~~python
+>>> # import
 >>> from pytable import Table as T, MutableTable as mT
 
+>>> # initialization
 >>> t = T([
 ...     ('ozzy', 'dog', 18),
 ...     ('marry', 'cat', 10),
@@ -34,48 +36,67 @@ Common Table operations extends [common Sequence operations](<https://docs.pytho
 
 #### Contains
 ~~~python
->>> ('marry', 'cat', 10) in t       # row in table
+>>> # row in table
+>>> ('marry', 'cat', 10) in t
 True
 
->>> 'dog' in t                      # item in table
+>>> # item in table
+>>> 'dog' in t                      
 True
 
->>> ('ozzy', 'cat', 18) not in t    # row not in table
+>>> # row not in table
+>>> ('ozzy', 'cat', 18) not in t    
 True
 
->>> 'bird' not in t                 # item not in table
+>>> # item not in table
+>>> 'bird' not in t                 
 True
 
 ~~~
 
 #### Get item
 ~~~python
->>> t[0]                            # row indexing
+>>> # row indexing
+>>> t[0]                            
 ('ozzy', 'dog', 18)
 
->>> t[1, 'animal']                  # item indexing
+>>> # item indexing
+>>> t[1, 'animal']                  
 'cat'
 
->>> t[:1]                           # row slicing
+>>> # row slicing
+>>> t[:1]                           
 Table([('ozzy', 'dog', 18)], columns=('name', 'animal', 'age'))
 
->>> #t[0, :'age']                    # column slicing
+>>> # column slicing
+>>> t[0, :'age']                   
+('ozzy', 'dog')
+
+>>> # rectange
+>>> t[:1, :'age']
 Table([('ozzy', 'dog')], columns=('name', 'animal'))
 
 ~~~
 
 #### Index and count
 ~~~python
->>> t.index(('marry', 'cat', 10))   # row index
+>>> # row index
+>>> t.index(('marry', 'cat', 10))   
 1
 
->>> t.index(18)                     # item index
+>>> # item index
+>>> t.index(18)                     
 (0, 'age')
 
->>> t.count(('ozzy', 'dog', 18))    # row count
+>>> t[t.index(18)]
+18
+
+>>> # row count
+>>> t.count(('ozzy', 'dog', 18))    
 1
 
->>> t.count('cat')                  # item count
+>>> # item count
+>>> t.count('cat')                  
 1
 
 ~~~
@@ -93,21 +114,23 @@ Mutable Table operations extends the [mutable sequence types](<https://docs.pyth
 
 #### Set item
 ~~~python
->>> t[0] = ('harry', 'mouse', 2)    # row update
+>>> # row update
+>>> t[0] = ('harry', 'mouse', 2)    
 >>> print(t)
 name   animal  age 
 ------ ------- ----
 harry  mouse      2
 marry  cat       10
 
->>> t[0, 'animal'] = 'python'       # item update
+>>> # item update
+>>> t[0, 'animal'] = 'python'       
 >>> print(t)
 name   animal  age 
 ------ ------- ----
 harry  python     2
 marry  cat       10
 
->>>                                 # slice update
+>>> # slice update
 >>> t[:, 'animal':] = T([('rabbit', 3), ('spider', 1)])
 >>> print(t)
 name   animal  age 
@@ -141,13 +164,15 @@ marry  spider  small     1 fly
 
 #### Delete item
 ~~~python
->>> del t[1]                        # row deleting
+>>> # row deleting
+>>> del t[1]                        
 >>> print(t)
 name   animal  size  age  food   
 ------ ------- ----- ---- -------
 harry  rabbit  big      3 carrot 
 
->>> del t[:, 'age']                 # column deleting
+>>> # column deleting
+>>> del t[:, 'age']                 
 >>> print(t)
 name   animal  size  food   
 ------ ------- ----- -------
