@@ -7,10 +7,10 @@ class Table(abc.Sequence):
     @property
     @abstractmethod
     def columns(self):
-        return tuple()      # pragma: no cover
-    
+        return tuple()  # pragma: no cover
+
     def __repr__(self):
-        return f'{self.__class__.__name__}({list(self)}, columns={self.columns})'
+        return f"{self.__class__.__name__}({list(self)}, columns={self.columns})"
 
     def __str__(self):
         size = [len(c) for c in self.columns]
@@ -18,17 +18,19 @@ class Table(abc.Sequence):
             for i, c in enumerate(row):
                 size[i] = max(size[i], len(str(c)))
 
-        t = ' '.join(f'{{:{s + 1}}}' for s in size)
+        t = " ".join(f"{{:{s + 1}}}" for s in size)
         s = [t.format(*self.columns).rstrip()]
-        s.append(t.format(*('-' * (i + 1) for i in size)).rstrip())
+        s.append(t.format(*("-" * (i + 1) for i in size)).rstrip())
         s.extend(t.format(*row).rstrip() for row in self)
 
-        return '\n'.join(s)
-    
+        return "\n".join(s)
+
     @abstractmethod
-    def __new__(cls, *args, **kwargs):
+    def __new__(
+        cls, sequence_of_rows: abc.Iterable[tuple] = None, columns: tuple[str] = None
+    ):
         return super().__new__(cls)
-    
+
     @abstractmethod
     def __getitem__(self, index):
         if isinstance(index, tuple):
@@ -42,7 +44,7 @@ class Table(abc.Sequence):
                     if start is None:
                         start = 0
                     else:
-                        raise ValueError(f'{start} not in columns')
+                        raise ValueError(f"{start} not in columns")
 
                 try:
                     stop = self.columns.index(stop)
@@ -51,21 +53,21 @@ class Table(abc.Sequence):
                     if stop is None:
                         stop = len(self.columns)
                     else:
-                        raise ValueError(f'{stop} not in columns')
+                        raise ValueError(f"{stop} not in columns")
 
                 col = slice(start, stop)
 
             else:
                 col = self.columns.index(col)
-        
+
         else:
             col = slice(None)
 
         return index, col
-    
+
     @abstractmethod
     def __len__(self):
-        return 0            # pragma: no cover
+        return 0  # pragma: no cover
 
     def __contains__(self, row_or_item) -> bool:
         if super().__contains__(row_or_item):
@@ -74,9 +76,9 @@ class Table(abc.Sequence):
         for row in self:
             if row_or_item in row:
                 return True
-            
+
         return False
-    
+
     def index(self, row_or_item):
         try:
             return super().index(row_or_item)
@@ -85,9 +87,9 @@ class Table(abc.Sequence):
             for i, row in enumerate(self):
                 if row_or_item in row:
                     return i, self.columns[row.index(row_or_item)]
-            
-        raise ValueError(f'{row_or_item} not found')
-    
+
+        raise ValueError(f"{row_or_item} not found")
+
     def count(self, row_or_item):
         if count := super().count(row_or_item):
             return count
@@ -97,7 +99,7 @@ class Table(abc.Sequence):
 
     def __hash__(self) -> int:
         return hash((self.columns, *list(self)))
-    
+
     def __eq__(self, other: Self) -> bool:
         try:
             if len(self) != len(other) or self.columns != other.columns:
@@ -112,18 +114,18 @@ class Table(abc.Sequence):
         for s, o in zip(self, other):
             if s != o:
                 return False
-            
+
         else:
             return True
 
     def __lt__(self, other: Self) -> bool:
         if not isinstance(other, Table):
-            raise TypeError(f'{other} is not a Table')
+            raise TypeError(f"{other} is not a Table")
 
         for s, o in zip(self, other):
             if not s < o:
                 return False
-            
+
         else:
             return True
 
@@ -131,22 +133,22 @@ class Table(abc.Sequence):
         assert self.columns == other.columns
 
         return type(self)(tuple(self) + tuple(other), columns=self.columns)
-    
+
     def __mul__(self, other: int) -> Self:
         return type(self)(tuple(self) * other, columns=self.columns)
 
-        
+
 class MutableTable(Table, abc.MutableSequence):
     __hash__ = None
 
     @abstractmethod
     def __setitem__(self, index, value):
-        pass            # pragma: no cover
+        pass  # pragma: no cover
 
     @abstractmethod
     def __delitem__(self, index):
-        pass            # pragma: no cover
+        pass  # pragma: no cover
 
     @abstractmethod
     def insert(self, index, value):
-        pass            # pragma: no cover
+        pass  # pragma: no cover
