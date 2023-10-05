@@ -101,7 +101,7 @@ class TestTable:
 
     def test__str__(self, tbl):
         assert str(tbl) == '\n'.join(l.lstrip() for l in """
-            name  animal  age 
+            name  animal  age
             ----- ------- ----
             ozzy  dog       18
             mary  cat       12

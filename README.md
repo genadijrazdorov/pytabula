@@ -21,7 +21,7 @@ Table is a subclass of Sequence as a sequence-of-rows.
 ... ], columns=('name', 'animal', 'age'))
 
 >>> print(t)
-name   animal  age 
+name   animal  age
 ------ ------- ----
 ozzy   dog       18
 marry  cat       10
@@ -35,41 +35,112 @@ marry  cat       10
 Common Table operations extends [common Sequence operations](<https://docs.python.org/3/library/stdtypes.html#common-sequence-operations>) API.
 
 #### Contains
+
+<details>
+<summary>show/hide sequence api</summary>
+
+##### Sequence
 ~~~python
 >>> # row in table
 >>> ('marry', 'cat', 10) in t
 True
 
 >>> # item in table
->>> 'dog' in t                      
+>>> any('dog' in row for row in t)
 True
 
 >>> # row not in table
->>> ('ozzy', 'cat', 18) not in t    
+>>> ('ozzy', 'cat', 18) not in t
 True
 
 >>> # item not in table
->>> 'bird' not in t                 
+>>> any('bird' not in row for row in t)
+True
+
+~~~
+
+</details>
+
+##### Table
+~~~python
+>>> # row in table
+>>> ('marry', 'cat', 10) in t
+True
+
+>>> # item in table
+>>> 'dog' in t
+True
+
+>>> # row not in table
+>>> ('ozzy', 'cat', 18) not in t
+True
+
+>>> # item not in table
+>>> 'bird' not in t
 True
 
 ~~~
 
 #### Get item
+
+
+<details>
+<summary>show/hide sequence api</summary>
+
+##### Sequence
 ~~~python
+>>> import enum
+>>> class Col(enum.IntEnum):
+...     NAME = 0
+...     ANIMAL = 1
+...     AGE = 2
+
 >>> # row indexing
->>> t[0]                            
+>>> t[0]
 ('ozzy', 'dog', 18)
 
 >>> # item indexing
->>> t[1, 'animal']                  
+>>> t[1][Col.ANIMAL]
 'cat'
 
 >>> # row slicing
->>> t[:1]                           
+>>> t[:1]
 Table([('ozzy', 'dog', 18)], columns=('name', 'animal', 'age'))
 
 >>> # column slicing
->>> t[0, :'age']                   
+>>> t[0][:Col.AGE]
+('ozzy', 'dog')
+
+>>> # rectange
+>>> T([r[:Col.AGE] for r in t[:1]], columns=t.columns[:Col.AGE])
+Table([('ozzy', 'dog')], columns=('name', 'animal'))
+
+~~~
+
+</details>
+
+##### Table
+~~~python
+>>> # import enum
+>>> # class Col(enum.IntEnum):
+>>> #     NAME = 0
+>>> #     ANIMAL = 1
+>>> #     AGE = 2
+
+>>> # row indexing
+>>> t[0]
+('ozzy', 'dog', 18)
+
+>>> # item indexing
+>>> t[1, 'animal']
+'cat'
+
+>>> # row slicing
+>>> t[:1]
+Table([('ozzy', 'dog', 18)], columns=('name', 'animal', 'age'))
+
+>>> # column slicing
+>>> t[0, :'age']
 ('ozzy', 'dog')
 
 >>> # rectange
@@ -79,24 +150,56 @@ Table([('ozzy', 'dog')], columns=('name', 'animal'))
 ~~~
 
 #### Index and count
+
+<details>
+<summary>show/hide sequence api</summary>
+
+##### Sequence
 ~~~python
 >>> # row index
->>> t.index(('marry', 'cat', 10))   
+>>> t.index(('marry', 'cat', 10))
 1
 
 >>> # item index
->>> t.index(18)                     
-(0, 'age')
+>>> row, col = next((i, Col(r.index(18))) for i, r in enumerate(t) if 18 in r)
+>>> row, col
+(0, <Col.AGE: 2>)
 
->>> t[t.index(18)]
+>>> t[row][col]
 18
 
 >>> # row count
->>> t.count(('ozzy', 'dog', 18))    
+>>> t.count(('ozzy', 'dog', 18))
 1
 
 >>> # item count
->>> t.count('cat')                  
+>>> sum(r.count('cat') for r in t)
+1
+
+~~~
+
+</details>
+
+##### Table
+~~~python
+>>> # row index
+>>> t.index(('marry', 'cat', 10))
+1
+
+>>> # item index
+>>> row, col = t.index(18)
+>>> row, col
+(0, 'age')
+
+>>> t[row, col]
+18
+
+>>> # row count
+>>> t.count(('ozzy', 'dog', 18))
+1
+
+>>> # item count
+>>> t.count('cat')
 1
 
 ~~~
@@ -115,17 +218,17 @@ Mutable Table operations extends the [mutable sequence types](<https://docs.pyth
 #### Set item
 ~~~python
 >>> # row update
->>> t[0] = ('harry', 'mouse', 2)    
+>>> t[0] = ('harry', 'mouse', 2)
 >>> print(t)
-name   animal  age 
+name   animal  age
 ------ ------- ----
 harry  mouse      2
 marry  cat       10
 
 >>> # item update
->>> t[0, 'animal'] = 'python'       
+>>> t[0, 'animal'] = 'python'
 >>> print(t)
-name   animal  age 
+name   animal  age
 ------ ------- ----
 harry  python     2
 marry  cat       10
@@ -133,7 +236,7 @@ marry  cat       10
 >>> # slice update
 >>> t[:, 'animal':] = T([('rabbit', 3), ('spider', 1)])
 >>> print(t)
-name   animal  age 
+name   animal  age
 ------ ------- ----
 harry  rabbit     3
 marry  spider     1
@@ -144,10 +247,10 @@ marry  spider     1
 ~~~python
 >>> t[:, 'food'] = ('carrot', 'fly')
 >>> print(t)
-name   animal  age  food   
+name   animal  age  food
 ------ ------- ---- -------
-harry  rabbit     3 carrot 
-marry  spider     1 fly    
+harry  rabbit     3 carrot
+marry  spider     1 fly
 
 ~~~
 
@@ -155,27 +258,27 @@ marry  spider     1 fly
 ~~~python
 >>> t[:, 'age':'age'] = T([('big',), ('small',)], columns=('size',))
 >>> print(t)
-name   animal  size   age  food   
+name   animal  size   age  food
 ------ ------- ------ ---- -------
-harry  rabbit  big       3 carrot 
-marry  spider  small     1 fly    
+harry  rabbit  big       3 carrot
+marry  spider  small     1 fly
 
 ~~~
 
 #### Delete item
 ~~~python
 >>> # row deleting
->>> del t[1]                        
+>>> del t[1]
 >>> print(t)
-name   animal  size  age  food   
+name   animal  size  age  food
 ------ ------- ----- ---- -------
-harry  rabbit  big      3 carrot 
+harry  rabbit  big      3 carrot
 
 >>> # column deleting
->>> del t[:, 'age']                 
+>>> del t[:, 'age']
 >>> print(t)
-name   animal  size  food   
+name   animal  size  food
 ------ ------- ----- -------
-harry  rabbit  big   carrot 
+harry  rabbit  big   carrot
 
 ~~~

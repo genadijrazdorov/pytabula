@@ -18,13 +18,12 @@ class Table(abc.Sequence):
             for i, c in enumerate(row):
                 size[i] = max(size[i], len(str(c)))
 
-        t = ' '.join(f'{{:{s + 1}}}' for s in size) + '\n'
-        s = t.format(*self.columns)
-        s += t.format(*('-' * (i + 1) for i in size))
-        for row in self:
-            s += t.format(*row)
+        t = ' '.join(f'{{:{s + 1}}}' for s in size)
+        s = [t.format(*self.columns).rstrip()]
+        s.append(t.format(*('-' * (i + 1) for i in size)).rstrip())
+        s.extend(t.format(*row).rstrip() for row in self)
 
-        return s[:-1]
+        return '\n'.join(s)
     
     @abstractmethod
     def __new__(cls, *args, **kwargs):
