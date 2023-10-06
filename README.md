@@ -12,10 +12,10 @@ Table is a subclass of Sequence as a sequence-of-rows.
 
 ~~~python
 >>> # import
->>> from pytable import Table as T, MutableTable as mT
+>>> from pytable import Table, MutableTable as MTable
 
 >>> # initialization
->>> t = T([
+>>> t = Table([
 ...     ('ozzy', 'dog', 18),
 ...     ('marry', 'cat', 10),
 ... ], columns=('name', 'animal', 'age'))
@@ -112,7 +112,7 @@ Table([('ozzy', 'dog', 18)], columns=('name', 'animal', 'age'))
 ('ozzy', 'dog')
 
 >>> # rectange
->>> T([r[:Col.AGE] for r in t[:1]], columns=t.columns[:Col.AGE])
+>>> Table([r[:Col.AGE] for r in t[:1]], columns=t.columns[:Col.AGE])
 Table([('ozzy', 'dog')], columns=('name', 'animal'))
 
 ~~~
@@ -216,7 +216,7 @@ Mutable Table operations extends the [mutable sequence types](<https://docs.pyth
 
 ###### Sequence
 ~~~python
->>> mt = mT(list(t), columns=t.columns)
+>>> mt = MTable(list(t), columns=t.columns)
 
 >>> # row update
 >>> mt[0] = ('harry', 'mouse', 2)
@@ -249,7 +249,7 @@ marry  spider     1
 
 ###### Table
 ~~~python
->>> mt = mT(list(t), columns=t.columns)
+>>> mt = MTable(list(t), columns=t.columns)
 
 >>> # row update
 >>> mt[0] = ('harry', 'mouse', 2)
@@ -269,7 +269,7 @@ marry  cat       10
 
 >>> # slice update
 
->>> mt[:, 'animal':] = T([('rabbit', 3), ('spider', 1)])
+>>> mt[:, 'animal':] = Table([('rabbit', 3), ('spider', 1)])
 >>> print(mt)
 name   animal  age
 ------ ------- ----
@@ -284,7 +284,7 @@ marry  spider     1
 
 ###### Sequence
 ~~~python
->>> mt = mT(list(t), columns=t.columns)
+>>> mt = MTable(list(t), columns=t.columns)
 
 >>> for row, value in zip(mt, ('chicken', 'fish')):
 ...     row.append(value)
@@ -301,7 +301,7 @@ marry  cat       10 fish
 
 ###### Table
 ~~~python
->>> mt = mT(list(t), columns=t.columns)
+>>> mt = MTable(list(t), columns=t.columns)
 
 
 
@@ -320,7 +320,7 @@ marry  cat       10 fish
 
 ###### Sequence
 ~~~python
->>> mt = mT(list(t), columns=t.columns)
+>>> mt = MTable(list(t), columns=t.columns)
 
 >>> for row, value in zip(mt, ('big', 'small')):
 ...     row[Col.AGE: Col.AGE] = (value,)
@@ -337,11 +337,11 @@ marry  cat     small    10
 
 ###### Table
 ~~~python
->>> mt = mT(list(t), columns=t.columns)
+>>> mt = MTable(list(t), columns=t.columns)
 
 
 
->>> mt[:, 'age':'age'] = T([('big',), ('small',)], columns=('size',))
+>>> mt[:, 'age':'age'] = Table([('big',), ('small',)], columns=('size',))
 >>> print(mt)
 name   animal  size   age
 ------ ------- ------ ----
@@ -356,7 +356,7 @@ marry  cat     small    10
 
 ###### Sequence
 ~~~python
->>> mt = mT(list(t), columns=t.columns)
+>>> mt = MTable(list(t), columns=t.columns)
 
 >>> # row deleting
 >>> del mt[1]
@@ -380,7 +380,7 @@ ozzy  dog
 
 ###### Table
 ~~~python
->>> mt = mT(list(t), columns=t.columns)
+>>> mt = MTable(list(t), columns=t.columns)
 
 >>> # row deleting
 >>> del mt[1]
