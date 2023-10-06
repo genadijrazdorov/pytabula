@@ -27,11 +27,21 @@ class Table(abc.Table):
 
         if isinstance(index, slice):
             if isinstance(col, slice):
-                return Table([row[col] for row in self._tbl[index]], self.columns[col])
+                return type(self)(
+                    [row[col] for row in self._tbl[index]], self.columns[col]
+                )
+
+            elif col is not None:
+                return [row[col] for row in self._tbl[index]]
+
             else:
-                return tuple(row[col] for row in self._tbl[index])
-        else:
+                return type(self)(self._tbl[index], self.columns)
+
+        elif col is not None:
             return self._tbl[index][col]
+
+        else:
+            return self._tbl[index]
 
     def __len__(self):
         return len(self._tbl)
@@ -47,6 +57,7 @@ class MutableTable(Table, abc.MutableTable):
         else:
             sequence_of_rows = [list(row) for row in sequence_of_rows]
         obj._tbl = sequence_of_rows
+
         if columns is None:
             columns = []
         else:
@@ -81,11 +92,22 @@ class MutableTable(Table, abc.MutableTable):
                 start, stop, step = index, index + 1, 1
                 value = iter([value])
 
-            for idx in range(start, stop, step):
-                self._tbl[idx][col] = next(value)
+            if col is None:
+                col = slice(None)
+
+            if isinstance(col, slice):
+                for idx in range(start, stop, step):
+                    self._tbl[idx][col] = list(next(value))
+
+            else:
+                for idx in range(start, stop, step):
+                    self._tbl[idx][col] = next(value)
 
     def __delitem__(self, index):
         index, col = super(Table, self).__getitem__(index)
+        if col is None:
+            col = slice(None)
+
         if index != slice(None) and col != slice(None):
             raise ValueError("Can only delete whole rows or columns")
 

@@ -61,7 +61,7 @@ class Table(abc.Sequence):
                 col = self.columns.index(col)
 
         else:
-            col = slice(None)
+            col = None
 
         return index, col
 

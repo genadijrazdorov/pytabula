@@ -131,8 +131,7 @@ class TestTable__getitem__:
         assert tbl[0, "name"] == "ozzy"
 
     def test_slice_single_column(self, tbl):
-        assert isinstance(tbl[0:1, "name"], tuple)
-        assert tbl[:1, "name"] == ("ozzy",)
+        assert tuple(tbl[:1, "name"]) == ("ozzy",)
 
     def test_slice_slice(self, tbl):
         assert tbl[:1, "name":"age"] == Table(
@@ -154,6 +153,14 @@ class TestMutableTable:
     def test__setitem__(self, mtbl):
         mtbl[0] = ("john", "cat", 12)
         assert tuple(mtbl[0]) == ("john", "cat", 12)
+
+    def test__setitem__item(self, mtbl):
+        mtbl[0, "name"] = "john"
+        assert mtbl[0, "name"] == "john"
+
+    def test__setitem__item_as_sequence(self, mtbl):
+        mtbl[0][0] = "john"
+        assert mtbl[0, "name"] == "john"
 
     def test__setitem__slice(self, mtbl):
         mtbl[:, "animal":] = Table([("rabbit", 3), ("spider", 1)])
