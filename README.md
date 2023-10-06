@@ -4,9 +4,9 @@
 [sequence]: <https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence>
 
 [Table][table] is a [sequence] of objects organized in rows and columns.
-Rows are integer indexed and columns are named.
+Rows are numbered and columns are named.
 
-Table is a subclass of Sequence as a sequence-of-rows.
+Table is a subclass of [`collections.abc.Sequence`][sequence], specifically a sequence-of-sequences.
 
 ## Table
 
