@@ -1,4 +1,4 @@
-from pytable import Table, MutableTable, abc
+from pytabula import Table, MutableTable, abc
 
 import pytest
 

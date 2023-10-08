@@ -1,10 +1,13 @@
 [tool.poetry]
-name = "pytable"
-version = "0.1.0"
-description = ""
+name = "pytabula"
+version = "0.2.0"
+description = "A minimal Python table extension"
 authors = ["Genadij Razdorov <genadijrazdorov@gmail.com>"]
 readme = "README.md"
-packages = [{include = "pytable", from = "src"}]
+packages = [{include = "pytabula", from = "src"}]
+license = "MIT"
+repository = "https://github.com/genadijrazdorov/pytabula"
+homepage = "https://github.com/genadijrazdorov/pytabula"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -16,7 +19,6 @@ coverage = "^7.3.1"
 pytest-cov = "^4.1.0"
 
 
-
 [tool.poetry.group.dev.dependencies]
 jupyter-console = "^6.6.3"
 
@@ -26,7 +28,7 @@ addopts = "--doctest-glob=*.md --doctest-modules"
 
 
 [tool.coverage.run]
-source = ["pytable"]
+source = ["pytabula"]
 command_line = "-m pytest -v"
 
 

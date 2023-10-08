@@ -7,3 +7,6 @@ coverage.xml
 
 # pandoc
 README.html
+
+# build
+dist

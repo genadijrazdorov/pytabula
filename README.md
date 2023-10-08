@@ -1,4 +1,4 @@
-# pyTable
+# pytabula
 
 [table]: <https://en.wikipedia.org/wiki/Table_(information)>
 [sequence]: <https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence>
@@ -12,7 +12,7 @@ Table is a subclass of [`collections.abc.Sequence`][sequence], specifically a se
 
 ~~~python
 >>> # import
->>> from pytable import Table, MutableTable as MTable
+>>> from pytabula import Table, MutableTable as MTable
 
 >>> # initialization
 >>> t = Table([
@@ -111,7 +111,7 @@ Table([('ozzy', 'dog', 18)], columns=('name', 'animal', 'age'))
 >>> t[0][:Col.AGE]
 ('ozzy', 'dog')
 
->>> # rectange
+>>> # rectangle
 >>> Table([r[:Col.AGE] for r in t[:1]], columns=t.columns[:Col.AGE])
 Table([('ozzy', 'dog')], columns=('name', 'animal'))
 
@@ -143,7 +143,7 @@ Table([('ozzy', 'dog', 18)], columns=('name', 'animal', 'age'))
 >>> t[0, :'age']
 ('ozzy', 'dog')
 
->>> # rectange
+>>> # rectangle
 >>> t[:1, :'age']
 Table([('ozzy', 'dog')], columns=('name', 'animal'))
 

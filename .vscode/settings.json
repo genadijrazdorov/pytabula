@@ -1,7 +1,5 @@
 {
     "python.testing.pytestArgs": [
-        "--cov=src",
-        "--cov-report=xml",
         "."
     ],
     "python.testing.unittestEnabled": false,
@@ -9,5 +7,10 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
     },
-    "python.formatting.provider": "none"
+    "python.formatting.provider": "none",
+    "cSpell.words": [
+        "mtbl",
+        "ozzy",
+        "pytabula"
+    ]
 }
