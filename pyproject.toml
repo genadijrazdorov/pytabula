@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "pytabula", from = "src"}]
 license = "MIT"
 repository = "https://github.com/genadijrazdorov/pytabula"
-homepage = "https://github.com/genadijrazdorov/pytabula"
+homepage = "https://genadijrazdorov.github.io/pytabula/"
 
 [tool.poetry.dependencies]
 python = "^3.11"
