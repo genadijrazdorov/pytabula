@@ -1,13 +1,17 @@
-from . import abc
 from collections.abc import Iterable
+from typing import Self
+
+from . import abc
 
 
 class Table(abc.Table):
     columns = tuple()
 
     def __new__(
-        cls, sequence_of_rows: Iterable[tuple] = None, columns: tuple[str] = None
-    ):
+        cls,
+        sequence_of_rows: abc.abc.Iterable[abc.Row] = None,
+        columns: tuple[str] = None,
+    ) -> Self:
         obj = super().__new__(cls)
         if sequence_of_rows is None:
             sequence_of_rows = tuple()
@@ -22,7 +26,7 @@ class Table(abc.Table):
         obj.columns = columns
         return obj
 
-    def __getitem__(self, index):
+    def __getitem__(self, index) -> abc.Item | abc.Row | Self:
         index, col = super().__getitem__(index)
 
         if isinstance(index, slice):
@@ -43,14 +47,16 @@ class Table(abc.Table):
         else:
             return self._tbl[index]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._tbl)
 
 
 class MutableTable(Table, abc.MutableTable):
     def __new__(
-        cls, sequence_of_rows: Iterable[list] = None, columns: list[str] = None
-    ):
+        cls,
+        sequence_of_rows: abc.abc.Iterable[abc.Row] = None,
+        columns: tuple[str] = None,
+    ) -> Self:
         obj = super().__new__(cls)
         if sequence_of_rows is None:
             sequence_of_rows = []
@@ -66,7 +72,7 @@ class MutableTable(Table, abc.MutableTable):
         obj.columns = columns
         return obj
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index, value) -> None:
         try:
             index, col = super(Table, self).__getitem__(index)
 
@@ -103,7 +109,7 @@ class MutableTable(Table, abc.MutableTable):
                 for idx in range(start, stop, step):
                     self._tbl[idx][col] = next(value)
 
-    def __delitem__(self, index):
+    def __delitem__(self, index) -> None:
         index, col = super(Table, self).__getitem__(index)
         if col is None:
             col = slice(None)
@@ -122,5 +128,5 @@ class MutableTable(Table, abc.MutableTable):
 
             del self.columns[col]
 
-    def insert(self, index, value):
+    def insert(self, index, value) -> None:
         self._tbl.insert(index, value)

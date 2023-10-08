@@ -1,5 +1,7 @@
 {
     "python.testing.pytestArgs": [
+        "--cov=src",
+        "--cov-report=xml",
         "."
     ],
     "python.testing.unittestEnabled": false,

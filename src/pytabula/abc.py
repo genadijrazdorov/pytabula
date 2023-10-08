@@ -1,38 +1,33 @@
 from collections import abc
 from abc import abstractmethod
-from typing import Self
+from typing import Any, Self, TypeAlias
+
+
+Item: TypeAlias = Any
+Row: TypeAlias = tuple[Item, ...]
 
 
 class Table(abc.Sequence):
+    """All the operations on a read-only table.
+
+    Concrete subclasses must override columns, __new__, __getitem__, and __len__.
+
+    """
+
     @property
     @abstractmethod
-    def columns(self):
+    def columns(self) -> tuple[str]:
+        "T.columns -> returns columns' names"
         return tuple()  # pragma: no cover
-
-    def __repr__(self):
-        return f"{self.__class__.__name__}({list(self)}, columns={self.columns})"
-
-    def __str__(self):
-        size = [len(c) for c in self.columns]
-        for row in self:
-            for i, c in enumerate(row):
-                size[i] = max(size[i], len(str(c)))
-
-        t = " ".join(f"{{:{s + 1}}}" for s in size)
-        s = [t.format(*self.columns).rstrip()]
-        s.append(t.format(*("-" * (i + 1) for i in size)).rstrip())
-        s.extend(t.format(*row).rstrip() for row in self)
-
-        return "\n".join(s)
 
     @abstractmethod
     def __new__(
-        cls, sequence_of_rows: abc.Iterable[tuple] = None, columns: tuple[str] = None
-    ):
+        cls, sequence_of_rows: abc.Iterable[Row] = None, columns: tuple[str] = None
+    ) -> Self:
         return super().__new__(cls)
 
     @abstractmethod
-    def __getitem__(self, index):
+    def __getitem__(self, index) -> Item | Row | Self:
         if isinstance(index, tuple):
             index, col = index
             if isinstance(col, slice):
@@ -66,36 +61,39 @@ class Table(abc.Sequence):
         return index, col
 
     @abstractmethod
-    def __len__(self):
+    def __len__(self) -> int:
         return 0  # pragma: no cover
 
-    def __contains__(self, row_or_item) -> bool:
-        if super().__contains__(row_or_item):
+    def __contains__(self, item_or_row: Item | Row) -> bool:
+        if super().__contains__(item_or_row):
             return True
 
         for row in self:
-            if row_or_item in row:
+            if item_or_row in row:
                 return True
 
         return False
 
-    def index(self, row_or_item):
+    def index(self, item_or_row: Item | Row) -> int | tuple[int, str]:
+        "T.index(x) -> integer index of x in T; raises ValueError if not found"
         try:
-            return super().index(row_or_item)
+            return super().index(item_or_row)
 
         except ValueError:
             for i, row in enumerate(self):
-                if row_or_item in row:
-                    return i, self.columns[row.index(row_or_item)]
+                if item_or_row in row:
+                    return i, self.columns[row.index(item_or_row)]
 
-        raise ValueError(f"{row_or_item} not found")
+        raise ValueError(f"{item_or_row} not found")
 
-    def count(self, row_or_item):
-        if count := super().count(row_or_item):
+    def count(self, item_or_row: Item | Row) -> int:
+        "T.count(x) -> number of occurrences of x in T"
+        if count := super().count(item_or_row):
             return count
 
         else:
-            return sum(1 for row in self if row_or_item in row)
+            # TODO: this is a row count, not an item count!
+            return sum(1 for row in self if item_or_row in row)
 
     def __hash__(self) -> int:
         return hash((self.columns, *list(self)))
@@ -137,18 +135,41 @@ class Table(abc.Sequence):
     def __mul__(self, other: int) -> Self:
         return type(self)(tuple(self) * other, columns=self.columns)
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({list(self)}, columns={self.columns})"
+
+    def __str__(self) -> str:
+        size = [len(c) for c in self.columns]
+        for row in self:
+            for i, c in enumerate(row):
+                size[i] = max(size[i], len(str(c)))
+
+        t = " ".join(f"{{:{s + 1}}}" for s in size)
+        s = [t.format(*self.columns).rstrip()]
+        s.append(t.format(*("-" * (i + 1) for i in size)).rstrip())
+        s.extend(t.format(*row).rstrip() for row in self)
+
+        return "\n".join(s)
+
 
 class MutableTable(Table, abc.MutableSequence):
+    """All the operations on a read-write table.
+
+    Concrete subclasses must override columns, __new__, __getitem__, __len__, __setitem__, __delitem__ and insert().
+
+    """
+
     __hash__ = None
 
     @abstractmethod
-    def __setitem__(self, index, value):
+    def __setitem__(self, index, value: Item | Row | Self) -> None:
         pass  # pragma: no cover
 
     @abstractmethod
-    def __delitem__(self, index):
+    def __delitem__(self, index) -> None:
         pass  # pragma: no cover
 
     @abstractmethod
-    def insert(self, index, value):
+    def insert(self, index: int, row: Row) -> None:
+        "T.insert(index, row) -> insert row at index"
         pass  # pragma: no cover
