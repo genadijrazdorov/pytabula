@@ -1,3 +1,7 @@
+<style>
+    code {font-family:monospace;}
+</style>
+
 ~~~
 p     y     t    a     b    u    l   a
 ----- ----- ---- ----- ---- ---- --- -----
