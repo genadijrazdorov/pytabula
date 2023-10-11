@@ -1,6 +1,1 @@
 markdown: GFM
-defaults:
-  - scope:
-      path: "README.md"
-    values:
-      strip_title: true
