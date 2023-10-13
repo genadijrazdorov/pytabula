@@ -1,3 +1,12 @@
+[table]: <https://en.wikipedia.org/wiki/Table_(information)>
+[Python]: <https://www.python.org/>
+[Sequence]: <https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence>
+[common sequence operations]: <https://docs.python.org/3/library/stdtypes.html#common-sequence-operations>
+[immutable sequence types]: <https://docs.python.org/3/library/stdtypes.html#immutable-sequence-types>
+[mutable sequence types]: <https://docs.python.org/3/library/stdtypes.html#mutable-sequence-types>
+[alternatives]: #alternatives
+
+
 <pre>
 p     y     t    a     b    u    l   a
 ----- ----- ---- ----- ---- ---- --- -----
@@ -13,22 +22,81 @@ p     y     t    a     b    u    l   a
 
 # pytabula
 
-[table]: <https://en.wikipedia.org/wiki/Table_(information)>
-[sequence]: <https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence>
+[![Discord](https://img.shields.io/discord/1162022978603728897?logo=discord)](https://discord.gg/yGtDjRhYy7)
+[![PyPI - License](https://img.shields.io/pypi/l/pytabula)](LICENSE)
+[![PyPI - Version](https://img.shields.io/pypi/v/pytabula)](https://pypi.org/project/pytabula/)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pytabula)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/genadijrazdorov/pytabula/python-app.yml)](https://github.com/genadijrazdorov/pytabula/actions/workflows/python-app.yml)
+[![CodeQL](https://github.com/genadijrazdorov/pytabula/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/genadijrazdorov/pytabula/actions/workflows/github-code-scanning/codeql)
 
-[Table][table] is a [sequence] of objects organized in rows and columns.
-Rows are numbered and columns are named.
 
-Table is a subclass of [`collections.abc.Sequence`][sequence], specifically a sequence-of-sequences.
+`pytabula` is a [Python] library for a [tabular data][table] based on [`collections.abc.Sequence`][Sequence].
 
-## Table
+A table is a sequence of items organized in rows and columns, much like a spreadsheet.
+Although it is missing from Python standard library, there are numerous [alternative solutions][alternatives].
+
+`pytabula.Table` is designed to be minimal and intuitive subclass of the [`Sequence`][Sequence] class.
+`Table`, as such is a sequence of *rows*, with each row being a sequence of individual *items*.
+Rows are indexed numerically and columns are named, allowing every item to be referenced by (row, column) pair.
+
+
+## Install
+
+`pytabula` can be easily pip installed.
+
+First create and/or activate virtual environment:
+
+~~~
+$ python3.11 -m venv venv
+$ source venv/bin/activate
+(venv) $
+
+~~~
+
+pip install `pytabula` into virtual environment:
+
+~~~
+(venv) $ python -m pip install pytabula
+Collecting pytabula
+  Using cached pytabula-0.2.0-py3-none-any.whl (5.9 kB)
+Installing collected packages: pytabula
+Successfully installed pytabula-0.2.0
+(venv) $
+
+~~~
+
+Check that `pytabula` is importable:
+
+~~~
+(venv) $ python -c "import pytabula as pt; print(pt.__pytabula__)"
+p     y     t    a     b    u    l   a
+----- ----- ---- ----- ---- ---- --- -----
+━━━━  ━━━━  ┏┓━  ━━━━  ┓━━  ━━━  ┓━  ━━━━
+━━━━  ━━━━  ┛┗┓  ━━━━  ┃━━  ━━━  ┃━  ━━━━
+┏━━┓  ┓━┏┓  ┓┏┛  ━━┓━  ┗━┓  ┓┏┓  ┃━  ━━┓━
+┃┏┓┃  ┃━┃┃  ┃┃━  ━┓┃━  ┏┓┃  ┃┃┃  ┃━  ━┓┃━
+┃┗┛┃  ┗━┛┃  ┃┗┓  ┗┛┗┓  ┗┛┃  ┗┛┃  ┗┓  ┗┛┗┓
+┃┏━┛  ━┓┏┛  ┗━┛  ━━━┛  ━━┛  ━━┛  ━┛  ━━━┛
+┃┃━━  ━┛┃━  ━━━  ━━━━  ━━━  ━━━  ━━  ━━━━
+┗┛━━  ━━┛━  ━━━  ━━━━  ━━━  ━━━  ━━  ━━━━
+
+(venv) $
+
+~~~
+
+
+## Use
+
+`pytabula` introduces two classes, namely `Table` and `MutableTable`, as subclasses of `Sequence` and `MutableSequence`.
+This implies that you can utilize `Table` and `MutableTable` in a manner similar to how you would use `tuple` and `list`, respectively. In this context, we'll exclusively showcase the enhancements made to this API.
+
 
 ~~~python
 >>> # import
->>> from pytabula import Table, MutableTable as MTable
+>>> import pytabula as tbl
 
 >>> # initialization
->>> t = Table([
+>>> t = tbl.Table([
 ...     ('ozzy', 'dog', 18),
 ...     ('marry', 'cat', 10),
 ... ], columns=('name', 'animal', 'age'))
@@ -45,7 +113,7 @@ marry  cat       10
 
 ### Common Table Operations
 
-Common Table operations extends [common Sequence operations](<https://docs.python.org/3/library/stdtypes.html#common-sequence-operations>) API.
+Check [common sequence operations] for full overview.
 
 #### Contains
 
@@ -125,7 +193,7 @@ Table([('ozzy', 'dog', 18)], columns=('name', 'animal', 'age'))
 ('ozzy', 'dog')
 
 >>> # rectangle
->>> Table([r[:Col.AGE] for r in t[:1]], columns=t.columns[:Col.AGE])
+>>> tbl.Table([r[:Col.AGE] for r in t[:1]], columns=t.columns[:Col.AGE])
 Table([('ozzy', 'dog')], columns=('name', 'animal'))
 
 ~~~
@@ -217,11 +285,14 @@ Table([('ozzy', 'dog')], columns=('name', 'animal'))
 
 ~~~
 
-<https://docs.python.org/3/library/stdtypes.html#immutable-sequence-types>
+### Immutable Table types
+
+Check [immutable sequence types] for full overview.
+
 
 ### Mutable Table operations
 
-Mutable Table operations extends the [mutable sequence types](<https://docs.python.org/3/library/stdtypes.html#mutable-sequence-types>) API.
+Check [mutable sequence types] for full overview.
 
 #### Set item
 <details>
@@ -229,7 +300,7 @@ Mutable Table operations extends the [mutable sequence types](<https://docs.pyth
 
 ###### Sequence
 ~~~python
->>> mt = MTable(list(t), columns=t.columns)
+>>> mt = tbl.MutableTable(list(t), columns=t.columns)
 
 >>> # row update
 >>> mt[0] = ('harry', 'mouse', 2)
@@ -262,7 +333,7 @@ marry  spider     1
 
 ###### Table
 ~~~python
->>> mt = MTable(list(t), columns=t.columns)
+>>> mt = tbl.MutableTable(list(t), columns=t.columns)
 
 >>> # row update
 >>> mt[0] = ('harry', 'mouse', 2)
@@ -282,7 +353,7 @@ marry  cat       10
 
 >>> # slice update
 
->>> mt[:, 'animal':] = Table([('rabbit', 3), ('spider', 1)])
+>>> mt[:, 'animal':] = tbl.Table([('rabbit', 3), ('spider', 1)])
 >>> print(mt)
 name   animal  age
 ------ ------- ----
@@ -297,7 +368,7 @@ marry  spider     1
 
 ###### Sequence
 ~~~python
->>> mt = MTable(list(t), columns=t.columns)
+>>> mt = tbl.MutableTable(list(t), columns=t.columns)
 
 >>> for row, value in zip(mt, ('chicken', 'fish')):
 ...     row.append(value)
@@ -314,7 +385,7 @@ marry  cat       10 fish
 
 ###### Table
 ~~~python
->>> mt = MTable(list(t), columns=t.columns)
+>>> mt = tbl.MutableTable(list(t), columns=t.columns)
 
 
 
@@ -333,7 +404,7 @@ marry  cat       10 fish
 
 ###### Sequence
 ~~~python
->>> mt = MTable(list(t), columns=t.columns)
+>>> mt = tbl.MutableTable(list(t), columns=t.columns)
 
 >>> for row, value in zip(mt, ('big', 'small')):
 ...     row[Col.AGE: Col.AGE] = (value,)
@@ -350,11 +421,11 @@ marry  cat     small    10
 
 ###### Table
 ~~~python
->>> mt = MTable(list(t), columns=t.columns)
+>>> mt = tbl.MutableTable(list(t), columns=t.columns)
 
 
 
->>> mt[:, 'age':'age'] = Table([('big',), ('small',)], columns=('size',))
+>>> mt[:, 'age':'age'] = tbl.Table([('big',), ('small',)], columns=('size',))
 >>> print(mt)
 name   animal  size   age
 ------ ------- ------ ----
@@ -369,7 +440,7 @@ marry  cat     small    10
 
 ###### Sequence
 ~~~python
->>> mt = MTable(list(t), columns=t.columns)
+>>> mt = tbl.MutableTable(list(t), columns=t.columns)
 
 >>> # row deleting
 >>> del mt[1]
@@ -393,7 +464,7 @@ ozzy  dog
 
 ###### Table
 ~~~python
->>> mt = MTable(list(t), columns=t.columns)
+>>> mt = tbl.MutableTable(list(t), columns=t.columns)
 
 >>> # row deleting
 >>> del mt[1]
