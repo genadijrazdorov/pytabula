@@ -7,7 +7,7 @@
 [alternatives]: #alternatives
 
 
-<pre>
+<pre id="pytabula-logo">
 p     y     t    a     b    u    l   a
 ----- ----- ---- ----- ---- ---- --- -----
 ━━━━  ━━━━  ┏┓━  ━━━━  ┓━━  ━━━  ┓━  ━━━━
