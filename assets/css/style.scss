@@ -3,4 +3,7 @@
 
 @import "{{ site.theme }}";
 
-#pytabula-logo {line-height: normal;}
+#pytabula-logo {
+    line-height: normal;
+    background-color: unset;
+}
