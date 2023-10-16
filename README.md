@@ -23,11 +23,14 @@ p     y     t    a     b    u    l   a
 # pytabula
 
 [![Discord](https://img.shields.io/discord/1162022978603728897?logo=discord)](https://discord.gg/yGtDjRhYy7)
+[![Static Badge](https://img.shields.io/badge/www-pytabula-_)](https://genadijrazdorov.github.io/pytabula/)
+[![Static Badge](https://img.shields.io/badge/pytabula-_?logo=github&logoColor=white&labelColor=black)](https://github.com/genadijrazdorov/pytabula)
 [![PyPI - License](https://img.shields.io/pypi/l/pytabula)](LICENSE)
 [![PyPI - Version](https://img.shields.io/pypi/v/pytabula)](https://pypi.org/project/pytabula/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pytabula)
 [![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/genadijrazdorov/pytabula/python-app.yml)](https://github.com/genadijrazdorov/pytabula/actions/workflows/python-app.yml)
 [![CodeQL](https://github.com/genadijrazdorov/pytabula/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/genadijrazdorov/pytabula/actions/workflows/github-code-scanning/codeql)
+
 
 
 `pytabula` is a [Python] library for a [tabular data][table] based on [`collections.abc.Sequence`][Sequence].
